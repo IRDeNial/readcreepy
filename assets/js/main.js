@@ -32,7 +32,8 @@
 
             let storyElement = document.createElement('div');
             storyElement.classList.add('story');
-            let datePosted = new Date(story.time/1000);
+            let datePosted = new Date(parseFloat(story.time));
+
             storyElement.innerHTML = `
                 <div class="row">
                     <div class="col-xs-12">
@@ -84,7 +85,7 @@
             for(let story of stories) {
                 let storyElement = document.createElement('div');
                 storyElement.classList.add('story');
-                let datePosted = new Date(story.time/1000);
+                let datePosted = new Date(parseFloat(story.time));
 
                 storyElement.innerHTML = `
                     <a href="#` + story.id + `" class="storyLink" data-storyid="` + story.id + `"></a>
