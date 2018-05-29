@@ -133,7 +133,9 @@
     };
 
     const singleStoryHashChangeHandler = () => {
-        loadSingleStory(window.location.hash.replace('#',''));
+        if(isHashSet()) {
+            loadSingleStory(window.location.hash.replace('#',''));
+        }
     };
 
     const eventListeners = () => {
