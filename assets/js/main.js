@@ -49,7 +49,7 @@
                 </div>
                 <div class="row">
                     <div class="col-xs-12">
-                        <a class="link detail" href="https://np.reddit.com` + story.url + `">Original:&nbsp;` + story.url + `</a>
+                        <a class="link detail" target="_BLANK" href="https://np.reddit.com` + story.url + `">Original:&nbsp;` + story.url + `</a>
                     </div>
                 </div>
                 <div class="row">
