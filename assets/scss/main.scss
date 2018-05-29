@@ -1,0 +1,122 @@
+// Normalize
+@import "normalize/import-now";
+// FlexBoxGrid
+@import "flexboxgrid";
+// Media Queries
+@import "include-media";
+
+// Fonts
+@import url('https://fonts.googleapis.com/css?family=Roboto|Special+Elite');
+
+// Variables
+$mainTextColor: #cacaca;
+$backgroundColor: rgb(50,50,50);
+$scaryFont: 'Special Elite', cursive;
+
+body,html {
+    font-family: 'Roboto', sans-serif;
+    padding: 0;
+    margin: 0;
+
+    background-color: $backgroundColor;
+    color: $mainTextColor;
+}
+
+header {
+    height: 50px;
+    line-height: 50px;
+    vertical-align: middle;
+
+    h1 {
+        padding: 0;
+        margin: 0;
+    }
+}
+
+#storyList {
+    min-height: calc(100vh - 100px);
+
+    .story {
+        padding-top: 5px;
+        padding-bottom: 5px;
+        position: relative;
+
+        .storyLink {
+            text-decoration: none;
+            color: inherit;
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+        }
+
+        .detail {
+            font-size: 12px;
+        }
+        .title {
+            font-family: $scaryFont;
+        }
+    }
+}
+
+#singleStory {
+    min-height: calc(100vh - 100px);
+
+    .story {
+        padding-top: 5px;
+        padding-bottom: 5px;
+
+        .returnButton {
+            padding: 0;
+            margin: 10px 0;
+            border: 0;
+            border-bottom: 1px solid $mainTextColor;
+            border-top: 1px solid $mainTextColor;
+            color: $mainTextColor;
+            display: block;
+            background-color: $backgroundColor;
+            text-align: center;
+            width: 100%;
+            padding: 10px;
+            cursor: pointer;
+        }
+    
+        .title {
+            font-family: $scaryFont;
+        }
+        .detail {
+            font-size: 12px;
+        }
+        .link {
+            text-decoration: none;
+            color: $mainTextColor;
+        }
+
+        .content {
+            a {
+                color: $mainTextColor;
+            }
+        }
+    }
+}
+
+.hidden {
+    display: none;
+}
+
+footer {
+    height: 50px;
+    line-height: 50px;
+    vertical-align: middle;
+    border-top: 1px solid #cacaca;
+
+    a {
+        text-decoration: none;
+        color: inherit;
+    }
+}
+
+.textCenter {
+    text-align: center;
+}
