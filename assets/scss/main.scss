@@ -9,8 +9,14 @@
 @import url('https://fonts.googleapis.com/css?family=Roboto|Special+Elite');
 
 // Variables
-$mainTextColor: #cacaca;
-$backgroundColor: rgb(50,50,50);
+$mainTextColor: rgb(200,200,200);
+$mainBackgroundColor: rgb(50,50,50);
+$mainDividerColor: rgb(200,200,200);
+
+$secondaryTextColor: rgb(200,200,200);
+$secondaryBackgroundColor: rgb(25,25,25);
+$secondaryDividerColor: rgb(50,50,50);
+
 $scaryFont: 'Special Elite', cursive;
 
 body,html {
