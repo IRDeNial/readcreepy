@@ -10,6 +10,14 @@
         return _a-_b;
     };
 
+    const loadingAnimation = (display) => {
+        if(display) {
+            document.querySelector('#loader').classList.remove('hidden');
+        } else {
+            document.querySelector('#loader').classList.add('hidden');
+        }
+    };
+
     const validateEnvironment = () => {
         if (!('fetch' in window)) return false;
         return true;
@@ -135,6 +143,7 @@
         document.querySelector('#storyList').appendChild(navigatorContainer);
         currentPage = activePage;
         setHash(currentPage,0)
+        loadingAnimation(false);
     };
 
     const returnButtonHandler = (e) => {
@@ -185,6 +194,7 @@
 
     const paginationButtonHandler = (e) => {
         if(e.target && e.target.classList.contains('page')) {
+            loadingAnimation(true);
             clearPage();
             renderStoryList(loadPage(e.target.dataset.page));
             buildNav(e.target.dataset.page);
@@ -208,6 +218,8 @@
     if(!validateEnvironment()) {
         throw Error("Invalid environment. Try a different browser");
     }
+
+    loadingAnimation(true);
 
     getStoryIndex().then((stories) => {
         if(isHashSet()) {
