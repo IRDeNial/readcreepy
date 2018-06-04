@@ -4,255 +4,261 @@
     var fullStories = null;
     var totalPages = 1;
 
-    const _dateSort = (a,b) => {
+    function _dateSort(a,b) {
         let _a = Number(a.time);
         let _b = Number(b.time);
         return _a-_b;
     };
 
-    const validateEnvironment = () => {
+    function validateEnvironment() {
         if (!('fetch' in window)) return false;
         return true;
     };
 
-    const clearSingleStory = () => {
+    function clearSingleStory() {
         let singleStory = document.querySelector('#singleStory .story');
         if(singleStory) {
             singleStory.parentNode.removeChild(singleStory);
         }
+    }
+
+    function clearPage() {
+        let oldStoryList = document.getElementById('storyList');
+        let newStoryList = oldStoryList.cloneNode();
+        oldStoryList.parentNode.replaceChild(newStoryList,oldStoryList);
     };
 
-    const clearPage = () => {
-        document.querySelector('#storyList').innerHTML = '';
-    };
-
-    const doError = (message) => {
-        //alert(message);
+    function doError(message) {
         throw Error(message);
     };
 
-    const loadSingleStory = (storyid) => {
-        return fetch('/content/' + storyid + '.json',{
-            headers: new Headers({
-                'Content-Type': 'application/json',
-                'Accept': 'application/json'
-            })
-        }).then((response) => {
-            return response.json();
-        }).catch((error) => {
-            doError(error);
-        }).then((story) => {
+    async function loadSingleStory(storyid) {
+        let request = await fetch('/content/' + storyid + '.json');
+        let story = await request.json();
+
+        try {
             clearSingleStory();
 
             let storyElement = document.createElement('div');
             storyElement.classList.add('story');
             let datePosted = new Date(parseFloat(story.time));
 
-            storyElement.innerHTML = `
-                <div class="row">
-                    <div class="col-xs-12 textCenter">
-                        <div class="title">${story.title}</div>
-                    </div>
-                </div>
-                <div class="row">
-                    <div class="col-xs-12 textCenter">
-                        <span class="author detail">Author: ${story.author}</span>
-                        <span class="detail">&nbsp;|&nbsp;</span>
-                        <span class="date detail">Date: ${datePosted.toLocaleDateString()}</span>
-                    </div>
-                </div>
-                <div class="row">
-                    <div class="col-xs-12 textCenter">
-                        <a class="link detail" target="_BLANK" href="https://np.reddit.com${story.url}">Original:&nbsp;${story.url}</a>
-                    </div>
-                </div>
-                <div class="row">
-                    <div class="col-xs-12">
-                        <button class="returnButton" type="button">Return To Story List</button>
-                    </div>
-                </div>
-                <div class="row">
-                    <div class="col-xs-12">
-                        <div class="content">${fixURLs(story.body)}</div>
-                    </div>
-                </div>
-                <div class="row">
-                    <div class="col-xs-12">
-                        <button class="returnButton" type="button">Return To Story List</button>
-                    </div>
-                </div>
-            `;
+            let storyTitle = document.createElement('div');
+            storyTitle.textContent = story.title;
+            storyTitle.classList.add('title');
+
+            let storyAuthor = document.createElement('span');
+            storyAuthor.textContent = 'Author: ' + story.author;
+            storyAuthor.classList.add('author','detail');
+
+            let storyDate = document.createElement('span');
+            storyDate.textContent = 'Date: ' + datePosted.toLocaleDateString();
+            storyDate.classList.add('date','detail');
+
+            let storyLink = document.createElement('a');
+            storyLink.textContent = 'Original: ' + story.url;
+            storyLink.classList.add('link','detail');
+            storyLink.setAttribute('target','_BLANK');
+            storyLink.setAttribute('href','https://np.reddit.com' + story.url);
+
+            let returnButton = document.createElement('button');
+            returnButton.classList.add('returnButton');
+            returnButton.setAttribute('type','button');
+            returnButton.textContent = 'Return To Story List';
+
+            let storyContent = document.createElement('div');
+            storyContent.classList.add('content');
+            storyContent.innerHTML = fixURLs(story.body);
+
+            storyElement.appendChild(storyTitle);
+            storyElement.appendChild(storyAuthor);
+            storyElement.appendChild(storyDate);
+            storyElement.appendChild(storyLink);
+            storyElement.appendChild(returnButton);
+            storyElement.appendChild(storyContent);
+            storyElement.appendChild(returnButton.cloneNode(true));
+
             document.querySelector('#singleStory').appendChild(storyElement);
-            setNavStory(story.id);
-        }).then(() => {
+            
+            document.querySelectorAll('.returnButton').forEach((target) => {
+                bindClickEventListener(target,returnButtonHandler);
+            });
+
             scrollToPosition(0);
             document.querySelector('#singleStory').classList.remove('hidden');
             document.querySelector('#storyList').classList.add('hidden');
-        });
+        } catch(error) {
+            doError(error);
+        }
     };
 
-    const loadPage = (pageIndex) => {
+    function loadPage(pageIndex) {
         if(isNaN(pageIndex)) {
             pageIndex = 0;
-        }
-        if(pageIndex > totalPages) {
+        } else if(pageIndex > totalPages) {
             pageIndex = totalPages;
-        }
-        if(pageIndex < 0) {
+        } else if(pageIndex < 0) {
             pageIndex = 0;
         }
         let pageStartIndex = amountPerPage * pageIndex;
-        let pageEndIndex = amountPerPage * pageIndex + amountPerPage;
+        let pageEndIndex = pageStartIndex + amountPerPage;
 
         return fullStories.slice(pageStartIndex,pageEndIndex);
     };
 
-    const getStoryIndex = () => {
-        return fetch('/content/index.json',{
-            headers: new Headers({
-                'Content-Type': 'application/json',
-                'Accept': 'application/json'
-            })
-        }).then((response) => {
-            return response.json();
-        }).catch((error) => {
+    async function getStoryIndex() {
+        let response = await fetch('/content/index.json');
+        let jsonData = await response.json();
+        try {
+            jsonData = jsonData.stories.sort(_dateSort).reverse();
+            fullStories = jsonData;
+            totalPages = Math.floor(fullStories.length/amountPerPage);
+        } catch(error) {
             doError(error);
-        }).then((response) => {
-            return response.stories.sort(_dateSort).reverse();
-        }).then((response) => {
-            fullStories = response;
-            totalPages = Math.floor((fullStories.length/amountPerPage));
-        });
+        }
     };
 
-    const fixURLs = (content) => {
-        return content.replace(/\"(https?\:)?\/\/((old|www|np)\.)?(reddit\.com\/r\/nosleep\/comments|redd\.it)\/([a-zA-Z0-9]+)(.*?)\>/gim,'"#$5">Link:&nbsp;');
+    function fixURLs(content) {
+        return content.replace(/\"(https?\:)?\/\/((old|www|np)\.)?(reddit\.com\/r\/nosleep\/comments|redd\.it)\/([a-zA-Z0-9]+)(.*?)\>/gim,'"/story/$5">Link:&nbsp;');
     };
 
-    const setNavStory = (storyID) => {
+    function setNavStory(storyID) {
         history.pushState(null,null,'story/' + storyID)
     };
-    const setNavPage = (pageID) => {
+    
+    function setNavPage(pageID) {
+        if(isNaN(pageID)) {
+            pageID = 1;
+        } else if(pageID < 1) {
+            pageID = 1;
+        } else if(pageID > totalPages) {
+            pageID = totalPages;
+        }
         history.pushState(null,null,'page/' + pageID)
     };
-    const isPathStory = () => {
+
+    function isPathStory() {
         return !!(window.location.pathname.match(/\/story\/(.*)/i));
     };
-    const isPathPage = () => {
+    
+    function isPathPage() {
         return !!(window.location.pathname.match(/\/page\/(.*)/i));
     };
-    const isValidPath = () => {
+
+    function isValidPath() {
         return !!(window.location.pathname.match(/\/(page|story)\/(.*)/i));
     };
 
-    const buildNav = (activePage) => {
+    function buildNav(activePage) {
         if(isNaN(activePage)) {
             activePage = 0;
-        }
-        if(activePage > (totalPages)) {
+        } else if(activePage > (totalPages)) {
             activePage = totalPages;
-        }
-        if(activePage < 0) {
+        } else if(activePage < 0) {
             activePage = 0;
         }
+
         let navigatorContainer = document.createElement('div');
         navigatorContainer.classList.add('navigation');
-        for(let i = 0;i <= parseInt((fullStories.length+1)/amountPerPage,10);++i) {
-            navigatorContainer.innerHTML += `<div class="page${(activePage == i ? ' active' : '')}" data-page="${i}">${(i + 1)}</div>`;
+        for(let i = 0;i <= totalPages;++i) {
+            let pageItem = document.createElement('div');
+            pageItem.classList.add('page');
+            if(activePage == i) {
+                pageItem.classList.add('active');
+            }
+            pageItem.dataset.page = i;
+            pageItem.textContent = i+1;
+            bindClickEventListener(pageItem,paginationButtonHandler);
+            navigatorContainer.appendChild(pageItem);
         }
         document.querySelector('#storyList').appendChild(navigatorContainer);
-        setNavPage(parseInt(activePage,10)+1);
     };
 
-    const scrollToPosition = (y) => {
+    function scrollToPosition(y) {
         scrollTo(0,y);
     };
 
-    const renderStoryList = (stories) => {
+    function renderStoryList(stories) {
         for(let story of stories) {
             let storyElement = document.createElement('div');
             storyElement.classList.add('story');
             let datePosted = new Date(parseFloat(story.time));
 
-            storyElement.innerHTML = `
-                <a href="/story/${story.id}" class="storyLink" data-storyid="${story.id}"></a>
-                <div class="row">
-                    <div class="col-xs-12">
-                        <div class="title">${story.title}</div>
-                    </div>
-                </div>
-                <div class="row">
-                    <div class="col-xs-12">
-                        <span class="author detail">Author: ${story.author}</span>
-                        <span class="detail">&nbsp;|&nbsp;</span>
-                        <span class="date detail">Date: ${datePosted.toLocaleDateString()}</span>
-                    </div>
-                </div>
-            `;
+            let storyLink = document.createElement('a');
+            storyLink.setAttribute('href','/story/'+story.id);
+            storyLink.classList.add('storyLink');
+            storyLink.dataset.storyid = story.id;
+            bindClickEventListener(storyLink,singleStoryButtonHandler);
+
+            let storyTitle = document.createElement('div');
+            storyTitle.classList.add('title');
+            storyTitle.textContent = story.title;
+
+            let storyAuthor = document.createElement('span');
+            storyAuthor.classList.add('author','detail');
+            storyAuthor.textContent = 'Author: ' + story.author;
+
+            let storyDate = document.createElement('span');
+            storyDate.classList.add('date','detail');
+            storyDate.textContent = 'Date: ' + datePosted.toLocaleDateString();
+
+            storyElement.appendChild(storyTitle);
+            storyElement.appendChild(storyAuthor);
+            storyElement.appendChild(storyDate);
+            storyElement.appendChild(storyLink);
 
             document.querySelector('#storyList').appendChild(storyElement);
         }
-    };
+    };    
 
-    const historyFix = (e) => {
-        window.location.reload(true);
-    };
-
-    const returnButtonHandler = (e) => {
+    function returnButtonHandler(e) {
         if(e.button != 0) return;
-        if(e.target && e.target.classList.contains('returnButton')) {
-            e.preventDefault();
-            document.querySelector('#singleStory').classList.add('hidden');
-            document.querySelector('#storyList').classList.remove('hidden');
-            clearPage();
-            renderStoryList(loadPage(currentPage));
-            buildNav(currentPage);
-        }
+
+        document.querySelector('#singleStory').classList.add('hidden');
+        document.querySelector('#storyList').classList.remove('hidden');
+        clearPage();
+        renderStoryList(loadPage(currentPage));
+        buildNav(currentPage);
+        setNavPage(currentPage+1);
     };
 
-    const singleStoryButtonHandler = (e) => {
+    function singleStoryButtonHandler(e) {
         if(e.button != 0) return;
-        if(e.target && e.target.classList.contains('storyLink')) {
-            e.preventDefault();
-            loadSingleStory(e.target.dataset.storyid);
-        }
+
+        loadSingleStory(e.target.dataset.storyid);
+        setNavStory(e.target.dataset.storyid);
     };
 
-    const preventDefaultHandler = (e) => {
+    function preventDefaultHandler(e) {
         if(e.button != 0) return;
+
         e.preventDefault();
     };
 
-    const paginationButtonHandler = (e) => {
+    function paginationButtonHandler(e) {
         if(e.button != 0) return;
-        if(e.target && e.target.classList.contains('page')) {
-            e.preventDefault();
-            clearPage();
-            renderStoryList(loadPage(e.target.dataset.page));
-            currentPage = e.target.dataset.page;
-            buildNav(e.target.dataset.page);
-            scrollToPosition(0);
+
+        clearPage();
+        renderStoryList(loadPage(e.target.dataset.page));
+        currentPage = parseInt(e.target.dataset.page);
+        buildNav(e.target.dataset.page);
+        setNavPage(parseInt(e.target.dataset.page,10)+1);
+        scrollToPosition(0);
+    };
+
+    function bindClickEventListener(target,functionName) {
+        target.addEventListener('mousedown',functionName);
+        target.addEventListener('touchstart',functionName);
+        target.addEventListener('click',preventDefaultHandler);
+    };
+
+    async function initialize() {
+        if(!validateEnvironment()) {
+            throw Error("Invalid environment. Try a different browser");
         }
-    };
 
-    const bindClickEventListener = (functionName) => {
-        document.addEventListener('mousedown',functionName);
-        document.addEventListener('touchstart',functionName);
-        document.addEventListener('click',preventDefaultHandler);
-    };
+        let stories = await getStoryIndex();
 
-    const eventListeners = () => {
-        bindClickEventListener(singleStoryButtonHandler);
-        bindClickEventListener(returnButtonHandler);
-        bindClickEventListener(paginationButtonHandler);
-        window.onpopstate = historyFix;
-    };
-
-    if(!validateEnvironment()) {
-        throw Error("Invalid environment. Try a different browser");
-    }
-
-    getStoryIndex().then((stories) => {
         if(isValidPath()) {
             if(isPathStory()) {
                 let storyID = window.location.pathname.match(/\/story\/(.*)/i)[1];
@@ -270,7 +276,8 @@
             buildNav(0);
         }
 
-        eventListeners();
         scrollToPosition(0);
-    });
+    }
+
+    initialize();
 })();
