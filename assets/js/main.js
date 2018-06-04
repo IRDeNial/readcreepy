@@ -224,7 +224,7 @@
     };
 
     const paginationButtonHandler = (e) => {
-        if(e.which != 1) return;
+        if(e.button != 0) return;
         if(e.target && e.target.classList.contains('page')) {
             e.preventDefault();
             clearPage();
