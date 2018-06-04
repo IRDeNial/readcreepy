@@ -81,6 +81,10 @@ header {
             word-break: break-word;
             word-wrap: break-word;
         }
+
+        .date {
+            margin-left: 5px;
+        }
     }
 
     .navigation {
@@ -144,11 +148,15 @@ header {
         .detail {
             font-size: 12px;
         }
+        .date {
+            margin-left: 5px;
+        }
         .link {
             text-decoration: none;
             color: $mainTextColor;
             word-break: break-word;
             word-wrap: break-word;
+            display: block;
         }
 
         .content {
