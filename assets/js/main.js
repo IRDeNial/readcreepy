@@ -82,6 +82,11 @@
                         <div class="content">${fixURLs(story.body)}</div>
                     </div>
                 </div>
+                <div class="row">
+                    <div class="col-xs-12">
+                        <button class="returnButton" type="button">Return To Story List</button>
+                    </div>
+                </div>
             `;
             document.querySelector('#singleStory').appendChild(storyElement);
             setNavStory(story.id);
