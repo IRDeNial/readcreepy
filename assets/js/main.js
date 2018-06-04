@@ -27,7 +27,7 @@
     };
 
     const doError = (message) => {
-        alert(message);
+        //alert(message);
         throw Error(message);
     }
 
