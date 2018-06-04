@@ -2,7 +2,7 @@
 <html>
     <head>
         <base href="/">
-        
+
         <meta charset="utf-8">
         <meta http-equiv="X-UA-Compatible" content="IE=edge">
         <meta name="viewport" content="width=device-width, initial-scale=1">
@@ -13,7 +13,6 @@
         <meta name="theme-color" content="#323232">
 
         <link rel="stylesheet" href="assets/css/main.min.css">
-        <link rel="stylesheet" href="assets/css/outdatedbrowser.min.css">
 
         <!--[if lte IE 9]>
             <script src="//oss.maxcdn.com/html5shiv/3.7.2/html5shiv.min.js"></script>
@@ -39,38 +38,6 @@
                 </div>
             </div>
         </footer>
-
-        <div id="outdated">
-            <h6>Your browser is out-of-date!</h6>
-            <p>Update your browser to view this website correctly. <a id="btnUpdateBrowser" href="http://outdatedbrowser.com/" target="_BLANK">Update my browser now </a></p>
-            <p class="last"><a href="#" id="btnCloseUpdateBrowser" title="Close">&times;</a></p>
-        </div>
-
-        <!-- Unsupported browser detection -->
-        <script src="assets/js/outdatedbrowser.js"></script>
-        <script>
-            function addLoadEvent(func) {
-                var oldonload = window.onload;
-                if (typeof window.onload != 'function') {
-                    window.onload = func;
-                } else {
-                    window.onload = function() {
-                        if (oldonload) {
-                            oldonload();
-                        }
-                        func();
-                    }
-                }
-            }
-            addLoadEvent(function(){
-                outdatedBrowser({
-                    bgColor: '#333333',
-                    color: '#fefefe',
-                    lowerThan: 'Edge',
-                    languagePath: ''
-                });
-            });
-        </script>
 
         <script src="assets/js/main.js"></script>
     </body>
