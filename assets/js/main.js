@@ -136,29 +136,21 @@
         return content.replace(/\"(https?\:)?\/\/((old|www|np)\.)?(reddit\.com\/r\/nosleep\/comments|redd\.it)\/([a-zA-Z0-9]+)(.*?)\>/gim,'"#$5">Link:&nbsp;');
     };
 
-    const setNavPage = (pageID) => {
-        if(pageID < 1) {
-            pageID = 1;
-        }
-        if(pageID > totalPages) {
-            pageID = totalPages+1;
-        }
-        window.location.hash = '/page/' + pageID;
-    };
     const setNavStory = (storyID) => {
-        window.location.hash = '/story/' + storyID;
+        history.pushState(null,null,'story/' + storyID)
     };
-
-    const isHashStory = () => {
-        return !!(window.location.hash.substr(1).match(/\/story\/(.*)/i));
+    const setNavPage = (pageID) => {
+        history.pushState(null,null,'page/' + pageID)
     };
-    const isHashPage = () => {
-        return !!(window.location.hash.substr(1).match(/\/page\/(.*)/i));
+    const isPathStory = () => {
+        return !!(window.location.pathname.match(/\/story\/(.*)/i));
     };
-
-    const isValidHash = () => {
-        return !!(window.location.hash.substr(1).match(/\/(page|story)\/(.*)/i));
+    const isPathPage = () => {
+        return !!(window.location.pathname.match(/\/page\/(.*)/i));
     };
+    const isValidPath = () => {
+        return !!(window.location.pathname.match(/\/(page|story)\/(.*)/i));
+    }
 
     const buildNav = (activePage) => {
         if(isNaN(activePage)) {
@@ -182,6 +174,7 @@
 
     const returnButtonHandler = (e) => {
         if(e.target && e.target.classList.contains('returnButton')) {
+            e.preventDefault();
             document.querySelector('#singleStory').classList.add('hidden');
             document.querySelector('#storyList').classList.remove('hidden');
             clearPage();
@@ -192,6 +185,7 @@
 
     const singleStoryButtonHandler = (e) => {
         if(e.target && e.target.classList.contains('storyLink')) {
+            e.preventDefault();
             loadSingleStory(e.target.dataset.storyid);
         }
     };
@@ -207,7 +201,7 @@
             let datePosted = new Date(parseFloat(story.time));
 
             storyElement.innerHTML = `
-                <a href="#${story.id}" class="storyLink" data-storyid="${story.id}"></a>
+                <a href="/story/${story.id}" class="storyLink" data-storyid="${story.id}"></a>
                 <div class="row">
                     <div class="col-xs-12">
                         <div class="title">${story.title}</div>
@@ -228,6 +222,7 @@
 
     const paginationButtonHandler = (e) => {
         if(e.target && e.target.classList.contains('page')) {
+            e.preventDefault();
             loadingAnimation(true);
             clearPage();
             renderStoryList(loadPage(e.target.dataset.page));
@@ -237,17 +232,18 @@
         }
     };
 
-    const singleStoryHashChangeHandler = () => {
-        if(isValidHash() && isHashStory()) {
-            loadSingleStory(window.location.hash.substr(1).match(/\/story\/(.*)/i)[1]);
-        }
+    const historyFix = (e) => {
+        window.location.reload(true);
     };
 
     const eventListeners = () => {
-        document.addEventListener('click',singleStoryButtonHandler);
-        document.addEventListener('click',returnButtonHandler);
-        document.addEventListener('click',paginationButtonHandler);
-        window.onhashchange = singleStoryHashChangeHandler;
+        document.addEventListener('mousedown',singleStoryButtonHandler);
+        document.addEventListener('touchstart',singleStoryButtonHandler);
+        document.addEventListener('mousedown',returnButtonHandler);
+        document.addEventListener('touchstart',returnButtonHandler);
+        document.addEventListener('mousedown',paginationButtonHandler);
+        document.addEventListener('touchstart',paginationButtonHandler);
+        window.onpopstate = historyFix;
     };
 
     if(!validateEnvironment()) {
@@ -257,14 +253,12 @@
     loadingAnimation(true);
 
     getStoryIndex().then((stories) => {
-        if(isValidHash()) {
-            if(isHashStory()) {
-                let storyID = window.location.hash.substr(1).match(/\/story\/(.*)/i)[1];
-                renderStoryList(loadPage(0));
-                buildNav(0);
+        if(isValidPath()) {
+            if(isPathStory()) {
+                let storyID = window.location.pathname.match(/\/story\/(.*)/i)[1];
                 loadSingleStory(storyID);
-            } else if(isHashPage()) {
-                let page = window.location.hash.substr(1).match(/\/page\/(.*)/i)[1];
+            } else if(isPathPage()) {
+                let page = window.location.pathname.match(/\/page\/(.*)/i)[1];
                 renderStoryList(loadPage(page-1));
                 buildNav(page-1)
             } else {

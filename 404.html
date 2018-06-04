@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <base href="/">
+        <meta charset="utf-8">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <title>ReadCreepy - We'll Help You Stay Up All Night</title>
+        <meta name="description" value="A collection of scary stories that are guarunteed to keep you up at night.  Reader discretion is advised.">
+        <meta name="author" content="https://github.com/IRDeNial/readcreepy">
+
+        <link rel="stylesheet" href="assets/css/main.min.css">
+        <link rel="stylesheet" href="assets/css/outdatedbrowser.min.css">
+
+        <!--[if lte IE 9]>
+            <script src="//oss.maxcdn.com/html5shiv/3.7.2/html5shiv.min.js"></script>
+            <script src="//oss.maxcdn.com/respond/1.4.2/respond.min.js"></script>
+        <![endif]-->
+    </head>
+    <body>
+        <header>
+            <div class="container-fluid">
+                <h1>ReadCreepy</h1>
+            </div>
+        </header>
+
+        <section id="storyList" class="container-fluid"></section>
+        <section id="singleStory" class="container-fluid hidden"></section>
+
+        <footer>
+            <div class="container-fluid">
+                <div class="row">
+                    <div class="col-xs-12 textCenter">
+                        <a href="https://github.com/IRDeNial/readcreepy" target="_BLANK">ReadCreepy</a> is maintained by <a href="https://github.com/IRDeNial" target="_BLANK">IRDeNial</a>.
+                    </div>
+                </div>
+            </div>
+        </footer>
+
+        <div id="loader">
+            
+        </div>
+
+        <div id="outdated">
+            <h6>Your browser is out-of-date!</h6>
+            <p>Update your browser to view this website correctly. <a id="btnUpdateBrowser" href="http://outdatedbrowser.com/" target="_BLANK">Update my browser now </a></p>
+            <p class="last"><a href="#" id="btnCloseUpdateBrowser" title="Close">&times;</a></p>
+        </div>
+
+        <!-- Unsupported browser detection -->
+        <script src="assets/js/outdatedbrowser.js"></script>
+        <script>
+            function addLoadEvent(func) {
+                var oldonload = window.onload;
+                if (typeof window.onload != 'function') {
+                    window.onload = func;
+                } else {
+                    window.onload = function() {
+                        if (oldonload) {
+                            oldonload();
+                        }
+                        func();
+                    }
+                }
+            }
+            addLoadEvent(function(){
+                outdatedBrowser({
+                    bgColor: '#333333',
+                    color: '#fefefe',
+                    lowerThan: 'Edge',
+                    languagePath: ''
+                });
+            });
+        </script>
+
+        <script src="assets/js/main.js"></script>
+    </body>
+</html>
