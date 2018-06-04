@@ -225,13 +225,15 @@
         window.location.reload(true);
     };
 
+    const bindClickEventListener = (functionName) => {
+        document.addEventListener('mousedown',functionName);
+        document.addEventListener('touchstart',functionName);
+    }
+
     const eventListeners = () => {
-        document.addEventListener('mousedown',singleStoryButtonHandler);
-        document.addEventListener('touchstart',singleStoryButtonHandler);
-        document.addEventListener('mousedown',returnButtonHandler);
-        document.addEventListener('touchstart',returnButtonHandler);
-        document.addEventListener('mousedown',paginationButtonHandler);
-        document.addEventListener('touchstart',paginationButtonHandler);
+        bindClickEventListener(singleStoryButtonHandler);
+        bindClickEventListener(returnButtonHandler);
+        bindClickEventListener(paginationButtonHandler);
         window.onpopstate = historyFix;
     };
 
