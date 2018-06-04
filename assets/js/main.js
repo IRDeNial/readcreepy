@@ -32,7 +32,7 @@
     };
 
     const loadSingleStory = (storyid) => {
-        return fetch('content/' + storyid + '.json',{
+        return fetch('/content/' + storyid + '.json',{
             headers: new Headers({
                 'Content-Type': 'application/json',
                 'Accept': 'application/json'
@@ -108,7 +108,7 @@
     };
 
     const getStoryIndex = () => {
-        return fetch('content/index.json',{
+        return fetch('/content/index.json',{
             headers: new Headers({
                 'Content-Type': 'application/json',
                 'Accept': 'application/json'
