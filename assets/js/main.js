@@ -260,6 +260,8 @@
         if(isValidHash()) {
             if(isHashStory()) {
                 let storyID = window.location.hash.substr(1).match(/\/story\/(.*)/i)[1];
+                renderStoryList(loadPage(0));
+                buildNav(0);
                 loadSingleStory(storyID);
             } else if(isHashPage()) {
                 let page = window.location.hash.substr(1).match(/\/page\/(.*)/i)[1];
