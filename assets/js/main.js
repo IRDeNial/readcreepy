@@ -56,19 +56,19 @@
 
             storyElement.innerHTML = `
                 <div class="row">
-                    <div class="col-xs-12">
+                    <div class="col-xs-12 textCenter">
                         <div class="title">${story.title}</div>
                     </div>
                 </div>
                 <div class="row">
-                    <div class="col-xs-12">
+                    <div class="col-xs-12 textCenter">
                         <span class="author detail">Author: ${story.author}</span>
                         <span class="detail">&nbsp;|&nbsp;</span>
                         <span class="date detail">Date: ${datePosted.toLocaleDateString()}</span>
                     </div>
                 </div>
                 <div class="row">
-                    <div class="col-xs-12">
+                    <div class="col-xs-12 textCenter">
                         <a class="link detail" target="_BLANK" href="https://np.reddit.com${story.url}">Original:&nbsp;${story.url}</a>
                     </div>
                 </div>
