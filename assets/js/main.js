@@ -164,24 +164,6 @@
         setNavPage(parseInt(activePage,10)+1);
     };
 
-    const returnButtonHandler = (e) => {
-        if(e.target && e.target.classList.contains('returnButton')) {
-            e.preventDefault();
-            document.querySelector('#singleStory').classList.add('hidden');
-            document.querySelector('#storyList').classList.remove('hidden');
-            clearPage();
-            renderStoryList(loadPage(currentPage));
-            buildNav(currentPage);
-        }
-    };
-
-    const singleStoryButtonHandler = (e) => {
-        if(e.target && e.target.classList.contains('storyLink')) {
-            e.preventDefault();
-            loadSingleStory(e.target.dataset.storyid);
-        }
-    };
-
     const scrollToPosition = (y) => {
         scrollTo(0,y);
     };
@@ -212,7 +194,37 @@
         }
     };
 
+    const historyFix = (e) => {
+        window.location.reload(true);
+    };
+
+    const returnButtonHandler = (e) => {
+        if(e.button != 0) return;
+        if(e.target && e.target.classList.contains('returnButton')) {
+            e.preventDefault();
+            document.querySelector('#singleStory').classList.add('hidden');
+            document.querySelector('#storyList').classList.remove('hidden');
+            clearPage();
+            renderStoryList(loadPage(currentPage));
+            buildNav(currentPage);
+        }
+    };
+
+    const singleStoryButtonHandler = (e) => {
+        if(e.button != 0) return;
+        if(e.target && e.target.classList.contains('storyLink')) {
+            e.preventDefault();
+            loadSingleStory(e.target.dataset.storyid);
+        }
+    };
+
+    const preventDefaultHandler = (e) => {
+        if(e.button != 0) return;
+        e.preventDefault();
+    };
+
     const paginationButtonHandler = (e) => {
+        if(e.which != 1) return;
         if(e.target && e.target.classList.contains('page')) {
             e.preventDefault();
             clearPage();
@@ -223,18 +235,10 @@
         }
     };
 
-    const historyFix = (e) => {
-        window.location.reload(true);
-    };
-
-    const preventDefault = (e) => {
-        e.preventDefault();
-    };
-
     const bindClickEventListener = (functionName) => {
         document.addEventListener('mousedown',functionName);
         document.addEventListener('touchstart',functionName);
-        document.addEventListener('click',preventDefault);
+        document.addEventListener('click',preventDefaultHandler);
     };
 
     const eventListeners = () => {
