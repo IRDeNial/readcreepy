@@ -1,4 +1,4 @@
-//(function(){
+(function(){
     var currentPage = 0;
     var amountPerPage = 25;
     var fullStories = null;
@@ -273,4 +273,4 @@
         scrollToPosition(0);
     });
     
-//})();
+})();
