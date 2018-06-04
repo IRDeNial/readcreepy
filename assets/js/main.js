@@ -169,12 +169,12 @@
         }
         var navigatorContainer = document.createElement('div');
         navigatorContainer.classList.add('navigation');
-        for(var i = 0;i <= parseInt((fullStories.length+1)/amountPerPage);++i) {
+        for(var i = 0;i <= parseInt((fullStories.length+1)/amountPerPage,10);++i) {
             navigatorContainer.innerHTML += `<div class="page${(activePage == i ? ' active' : '')}" data-page="${i}">${(i + 1)}</div>`;
         }
         document.querySelector('#storyList').appendChild(navigatorContainer);
         loadingAnimation(false);
-        setNavPage(parseInt(activePage)+1);
+        setNavPage(parseInt(activePage,10)+1);
     };
 
     const returnButtonHandler = (e) => {
