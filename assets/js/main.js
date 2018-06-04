@@ -24,8 +24,9 @@
     };
 
     const clearSingleStory = () => {
-        if(document.querySelector('#singleStory .story')) {
-            document.querySelector('#singleStory').removeChild(singleStory);
+        let singleStory = document.querySelector('#singleStory .story');
+        if(singleStory) {
+            singleStory.parentNode.removeChild(singleStory);
         }
     };
 
