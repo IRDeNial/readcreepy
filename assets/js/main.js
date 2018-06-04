@@ -39,7 +39,9 @@
             })
         }).then((response) => {
             return response.json();
-        }).catch((error) => { doError(error); }).then((story) => {
+        }).catch((error) => {
+            doError(error);
+        }).then((story) => {
             clearSingleStory();
 
             let storyElement = document.createElement('div');
