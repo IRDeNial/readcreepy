@@ -186,7 +186,9 @@
         if(e.target && e.target.classList.contains('returnButton')) {
             document.querySelector('#singleStory').classList.add('hidden');
             document.querySelector('#storyList').classList.remove('hidden');
-            scrollToPosition(0);
+            clearPage();
+            renderStoryList(loadPage(currentPage));
+            buildNav(currentPage);
         }
     };
 
