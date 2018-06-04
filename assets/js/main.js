@@ -29,7 +29,7 @@
     const doError = (message) => {
         //alert(message);
         throw Error(message);
-    }
+    };
 
     const loadSingleStory = (storyid) => {
         return fetch('content/' + storyid + '.json',{
@@ -143,7 +143,7 @@
     };
     const isValidPath = () => {
         return !!(window.location.pathname.match(/\/(page|story)\/(.*)/i));
-    }
+    };
 
     const buildNav = (activePage) => {
         if(isNaN(activePage)) {
@@ -229,13 +229,13 @@
 
     const preventDefault = (e) => {
         e.preventDefault();
-    }
+    };
 
     const bindClickEventListener = (functionName) => {
         document.addEventListener('mousedown',functionName);
         document.addEventListener('touchstart',functionName);
-        document.addEventListener('onclick',preventDefault);
-    }
+        document.addEventListener('click',preventDefault);
+    };
 
     const eventListeners = () => {
         bindClickEventListener(singleStoryButtonHandler);
