@@ -1,8 +1,8 @@
 //(function(){
-    var savedScrollPosition = 0;
     var currentPage = 0;
     var amountPerPage = 25;
     var fullStories = null;
+    var totalPages = 1;
 
     const _dateSort = (a,b) => {
         let _a = Number(a.time);
@@ -57,19 +57,19 @@
             storyElement.innerHTML = `
                 <div class="row">
                     <div class="col-xs-12">
-                        <div class="title">` + story.title + `</div>
+                        <div class="title">${story.title}</div>
                     </div>
                 </div>
                 <div class="row">
                     <div class="col-xs-12">
-                        <span class="author detail">Author: ` + story.author + `</span>
+                        <span class="author detail">Author: ${story.author}</span>
                         <span class="detail">&nbsp;|&nbsp;</span>
-                        <span class="date detail">Date: ` + datePosted.toLocaleDateString() + `</span>
+                        <span class="date detail">Date: ${datePosted.toLocaleDateString()}</span>
                     </div>
                 </div>
                 <div class="row">
                     <div class="col-xs-12">
-                        <a class="link detail" target="_BLANK" href="https://np.reddit.com` + story.url + `">Original:&nbsp;` + story.url + `</a>
+                        <a class="link detail" target="_BLANK" href="https://np.reddit.com${story.url}">Original:&nbsp;${story.url}</a>
                     </div>
                 </div>
                 <div class="row">
@@ -79,12 +79,13 @@
                 </div>
                 <div class="row">
                     <div class="col-xs-12">
-                        <div class="content">` + fixURLs(story.body) + `</div>
+                        <div class="content">${fixURLs(story.body)}</div>
                     </div>
                 </div>
             `;
             document.querySelector('#singleStory').appendChild(storyElement);
-            setHash(currentPage,story.id)
+            setNavStory(story.id);
+            loadingAnimation(false);
         }).then(() => {
             scrollToPosition(0);
             document.querySelector('#singleStory').classList.remove('hidden');
@@ -93,6 +94,15 @@
     };
 
     const loadPage = (pageIndex) => {
+        if(isNaN(pageIndex)) {
+            pageIndex = 0;
+        }
+        if(pageIndex > totalPages) {
+            pageIndex = totalPages;
+        }
+        if(pageIndex < 0) {
+            pageIndex = 0;
+        }
         var pageStartIndex = amountPerPage * pageIndex;
         var pageEndIndex = amountPerPage * pageIndex + amountPerPage;
 
@@ -111,6 +121,7 @@
             return response.stories.sort(_dateSort).reverse();
         }).then((response) => {
             fullStories = response;
+            totalPages = Math.floor((fullStories.length/amountPerPage));
         });
     };
 
@@ -119,45 +130,63 @@
         return content;
     };
 
-    const parseHash = () => {
-        return JSON.parse(atob(window.location.hash.split('#')[1]));
+    const setNavPage = (pageID) => {
+        //if(isNaN(pageID)) {
+        //    pageID = 1;
+        //}
+        if(pageID < 1) {
+            pageID = 1;
+        }
+        if(pageID > totalPages) {
+            pageID = totalPages+1;
+        }
+        window.location.hash = '/page/' + pageID;
     };
-    const encodeHash = () => {
-        return btoa(JSON.stringify(window.location.hash.split('#')[1]));
-    }
-    const setHash = (page,story) => {
-        window.location.hash = btoa(JSON.stringify({"page":parseInt(page),"story":story}));
-    }
+    const setNavStory = (storyID) => {
+        window.location.hash = '/story/' + storyID;
+    };
 
-    const isHashSet = () => {
-        return !(window.location.hash == "");
+    const isHashStory = () => {
+        return !!(window.location.hash.substr(1).match(/\/story\/(.*)/i));
+    };
+    const isHashPage = () => {
+        return !!(window.location.hash.substr(1).match(/\/page\/(.*)/i));
+    };
+
+    const isValidHash = () => {
+        return !!(window.location.hash.substr(1).match(/\/(page|story)\/(.*)/i));
     };
 
     const buildNav = (activePage) => {
+        if(isNaN(activePage)) {
+            activePage = 0;
+        }
+        if(activePage > (totalPages)) {
+            activePage = totalPages;
+        }
+        if(activePage < 0) {
+            activePage = 0;
+        }
         var navigatorContainer = document.createElement('div');
         navigatorContainer.classList.add('navigation');
-        var totalPages = 1;
-        for(var i = 0;i <= parseInt((fullStories.length+1)/amountPerPage);++i,++totalPages) {
-            navigatorContainer.innerHTML += `<div class="page` + (activePage == i ? ' active' : '') + `" data-page="` + (i) + `">` + (i + 1) + `</div>`;
+        for(var i = 0;i <= parseInt((fullStories.length+1)/amountPerPage);++i) {
+            navigatorContainer.innerHTML += `<div class="page${(activePage == i ? ' active' : '')}" data-page="${i}">${(i + 1)}</div>`;
         }
         document.querySelector('#storyList').appendChild(navigatorContainer);
-        currentPage = activePage;
-        setHash(currentPage,0)
         loadingAnimation(false);
+        setNavPage(parseInt(activePage)+1);
     };
 
     const returnButtonHandler = (e) => {
         if(e.target && e.target.classList.contains('returnButton')) {
             document.querySelector('#singleStory').classList.add('hidden');
             document.querySelector('#storyList').classList.remove('hidden');
-            setHash(currentPage,0);
-            scrollToPosition(0)
+            scrollToPosition(0);
         }
     };
 
     const singleStoryButtonHandler = (e) => {
         if(e.target && e.target.classList.contains('storyLink')) {
-            savedScrollPosition = window.scrollY;
             loadSingleStory(e.target.dataset.storyid);
         }
     };
@@ -173,17 +202,17 @@
             let datePosted = new Date(parseFloat(story.time));
 
             storyElement.innerHTML = `
-                <a href="#` + story.id + `" class="storyLink" data-storyid="` + story.id + `"></a>
+                <a href="#${story.id}" class="storyLink" data-storyid="${story.id}"></a>
                 <div class="row">
                     <div class="col-xs-12">
-                        <div class="title">` + story.title + `</div>
+                        <div class="title">${story.title}</div>
                     </div>
                 </div>
                 <div class="row">
                     <div class="col-xs-12">
-                        <span class="author detail">Author: ` + story.author + `</span>
+                        <span class="author detail">Author: ${story.author}</span>
                         <span class="detail">&nbsp;|&nbsp;</span>
-                        <span class="date detail">Date: ` + datePosted.toLocaleDateString() + `</span>
+                        <span class="date detail">Date: ${datePosted.toLocaleDateString()}</span>
                     </div>
                 </div>
             `;
@@ -197,14 +226,15 @@
             loadingAnimation(true);
             clearPage();
             renderStoryList(loadPage(e.target.dataset.page));
+            currentPage = e.target.dataset.page;
             buildNav(e.target.dataset.page);
             scrollToPosition(0);
         }
     };
 
     const singleStoryHashChangeHandler = () => {
-        if(isHashSet() && parseHash().story != 0) {
-            loadSingleStory(parseHash().story);
+        if(isValidHash() && isHashStory()) {
+            loadSingleStory(window.location.hash.substr(1).match(/\/story\/(.*)/i)[1]);
         }
     };
 
@@ -222,13 +252,17 @@
     loadingAnimation(true);
 
     getStoryIndex().then((stories) => {
-        if(isHashSet()) {
-            parsedHash = parseHash();
-            if(parsedHash.story != 0) {
-                loadSingleStory(parsedHash.story);
+        if(isValidHash()) {
+            if(isHashStory()) {
+                let storyID = window.location.hash.substr(1).match(/\/story\/(.*)/i)[1];
+                loadSingleStory(storyID);
+            } else if(isHashPage()) {
+                let page = window.location.hash.substr(1).match(/\/page\/(.*)/i)[1];
+                renderStoryList(loadPage(page-1));
+                buildNav(page-1)
             } else {
-                renderStoryList(loadPage(parsedHash.page));
-                buildNav(parsedHash.page);
+                renderStoryList(loadPage(0));
+                buildNav(0);
             }
         } else {
             renderStoryList(loadPage(0));
