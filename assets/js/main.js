@@ -24,8 +24,7 @@
     };
 
     const clearSingleStory = () => {
-        let singleStory = document.querySelector('#singleStory .story');
-        if(singleStory) {
+        if(document.querySelector('#singleStory .story')) {
             document.querySelector('#singleStory').removeChild(singleStory);
         }
     };
@@ -108,8 +107,8 @@
         if(pageIndex < 0) {
             pageIndex = 0;
         }
-        var pageStartIndex = amountPerPage * pageIndex;
-        var pageEndIndex = amountPerPage * pageIndex + amountPerPage;
+        let pageStartIndex = amountPerPage * pageIndex;
+        let pageEndIndex = amountPerPage * pageIndex + amountPerPage;
 
         return fullStories.slice(pageStartIndex,pageEndIndex);
     };
@@ -122,7 +121,9 @@
             })
         }).then((response) => {
             return response.json();
-        }).catch((error) => { doError(error); }).then((response) => {
+        }).catch((error) => {
+            doError(error);
+        }).then((response) => {
             return response.stories.sort(_dateSort).reverse();
         }).then((response) => {
             fullStories = response;
@@ -131,14 +132,10 @@
     };
 
     const fixURLs = (content) => {
-        content = content.replace(/\"(https?\:)?\/\/((old|www|np)\.)?(reddit\.com\/r\/nosleep\/comments|redd\.it)\/([a-zA-Z0-9]+)(.*?)\>/gim,'"#$5">Link:&nbsp;');
-        return content;
+        return content.replace(/\"(https?\:)?\/\/((old|www|np)\.)?(reddit\.com\/r\/nosleep\/comments|redd\.it)\/([a-zA-Z0-9]+)(.*?)\>/gim,'"#$5">Link:&nbsp;');
     };
 
     const setNavPage = (pageID) => {
-        //if(isNaN(pageID)) {
-        //    pageID = 1;
-        //}
         if(pageID < 1) {
             pageID = 1;
         }
@@ -172,9 +169,9 @@
         if(activePage < 0) {
             activePage = 0;
         }
-        var navigatorContainer = document.createElement('div');
+        let navigatorContainer = document.createElement('div');
         navigatorContainer.classList.add('navigation');
-        for(var i = 0;i <= parseInt((fullStories.length+1)/amountPerPage,10);++i) {
+        for(let i = 0;i <= parseInt((fullStories.length+1)/amountPerPage,10);++i) {
             navigatorContainer.innerHTML += `<div class="page${(activePage == i ? ' active' : '')}" data-page="${i}">${(i + 1)}</div>`;
         }
         document.querySelector('#storyList').appendChild(navigatorContainer);
@@ -203,7 +200,7 @@
     };
 
     const renderStoryList = (stories) => {
-        for(story of stories) {
+        for(let story of stories) {
             let storyElement = document.createElement('div');
             storyElement.classList.add('story');
             let datePosted = new Date(parseFloat(story.time));
@@ -281,5 +278,4 @@
         eventListeners();
         scrollToPosition(0);
     });
-    
 })();
