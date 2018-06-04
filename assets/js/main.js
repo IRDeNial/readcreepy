@@ -227,9 +227,14 @@
         window.location.reload(true);
     };
 
+    const preventDefault = (e) => {
+        e.preventDefault();
+    }
+
     const bindClickEventListener = (functionName) => {
         document.addEventListener('mousedown',functionName);
         document.addEventListener('touchstart',functionName);
+        document.addEventListener('onclick',preventDefault);
     }
 
     const eventListeners = () => {
