@@ -37,8 +37,6 @@
         let story = await request.json();
 
         try {
-            clearSingleStory();
-
             let storyElement = document.createElement('div');
             storyElement.classList.add('story');
             let datePosted = new Date(parseFloat(story.time));
@@ -177,6 +175,8 @@
     };
 
     function renderStoryList(stories) {
+        clearSingleStory();
+        
         for(let story of stories) {
             let storyElement = document.createElement('div');
             storyElement.classList.add('story');
