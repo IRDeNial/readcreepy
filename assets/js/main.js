@@ -52,7 +52,7 @@
             storyAuthor.classList.add('author','detail');
 
             let storyDate = document.createElement('span');
-            storyDate.textContent = 'Date: ' + datePosted.toLocaleDateString();
+            storyDate.textContent = 'Posted ' + moment(datePosted.toLocaleDateString()).fromNow();
             storyDate.classList.add('date','detail');
 
             let storyLink = document.createElement('a');
@@ -200,7 +200,7 @@
 
             let storyDate = document.createElement('span');
             storyDate.classList.add('date','detail');
-            storyDate.textContent = 'Date: ' + datePosted.toLocaleDateString();
+            storyDate.textContent = 'Date: ' + moment(datePosted.toLocaleDateString()).fromNow();
 
             storyElement.appendChild(storyTitle);
             storyElement.appendChild(storyAuthor);
