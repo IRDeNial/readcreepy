@@ -164,6 +164,10 @@ header {
                 color: $mainTextColor;
             }
 
+            .pre {
+                white-space: normal;
+            }
+
             word-break: break-word;
             word-wrap: break-word;
         }
