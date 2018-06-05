@@ -47,8 +47,10 @@
             storyTitle.textContent = story.title;
             storyTitle.classList.add('title');
 
-            let storyAuthor = document.createElement('span');
+            let storyAuthor = document.createElement('a');
             storyAuthor.textContent = 'Author: ' + story.author;
+            storyAuthor.setAttribute('target','_BLANK');
+            storyAuthor.setAttribute('href','https://reddit.com/u/' + story.author);
             storyAuthor.classList.add('author','detail');
 
             let storyDate = document.createElement('span');
