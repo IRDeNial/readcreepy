@@ -147,10 +147,6 @@
         return !!(window.location.pathname.match(/\/page\/(.*)/i));
     };
 
-    function isValidPath() {
-        return !!(window.location.pathname.match(/\/(page|story)\/(.*)/i));
-    };
-
     function buildNav(activePage) {
         if(isNaN(activePage)) {
             activePage = 0;
@@ -261,18 +257,13 @@
 
         let stories = await getStoryIndex();
 
-        if(isValidPath()) {
-            if(isPathStory()) {
-                let storyID = window.location.pathname.match(/\/story\/(.*)/i)[1];
-                loadSingleStory(storyID);
-            } else if(isPathPage()) {
-                let page = window.location.pathname.match(/\/page\/(.*)/i)[1];
-                renderStoryList(loadPage(page-1));
-                buildNav(page-1)
-            } else {
-                renderStoryList(loadPage(0));
-                buildNav(0);
-            }
+        if(isPathStory()) {
+            let storyID = window.location.pathname.match(/\/story\/(.*)/i)[1];
+            loadSingleStory(storyID);
+        } else if(isPathPage()) {
+            let page = window.location.pathname.match(/\/page\/(.*)/i)[1];
+            renderStoryList(loadPage(page-1));
+            buildNav(page-1)
         } else {
             renderStoryList(loadPage(0));
             buildNav(0);
