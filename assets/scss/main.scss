@@ -140,6 +140,10 @@ header {
         }
     
         .title {
+            @include media("<tablet") {
+                text-align: center;
+            }
+
             font-family: $scaryFont;
             word-break: break-word;
             word-wrap: break-word;
