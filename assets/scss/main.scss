@@ -74,11 +74,15 @@ header {
         @include media("<tablet") {
             text-align: center;
         }
-        background-color: #444444;
+        background-color: #3a3a3a;
         padding: 10px 5px;
         position: relative;
         border-radius: 5px;
         margin-bottom: 5px;
+
+        &:hover {
+            background-color: #4f4f4f;
+        }
 
         .storyLink {
             text-decoration: none;
