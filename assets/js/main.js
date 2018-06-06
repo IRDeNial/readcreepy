@@ -206,19 +206,14 @@
             storyTitle.classList.add('title');
             storyTitle.textContent = story.title;
 
-            let storyAuthor = document.createElement('span');
-            storyAuthor.classList.add('author','detail');
-            storyAuthor.textContent = 'Author: ' + story.author;
-
             let storyDate = document.createElement('span');
             storyDate.classList.add('date','detail');
-            storyDate.textContent = 'Date: ' + moment(datePosted.toLocaleDateString()).fromNow();
+            storyDate.textContent = moment(datePosted.toLocaleDateString()).fromNow();
 
             let clearFloat = document.createElement('div');
             clearFloat.classList.add('clearFloat');
 
             storyElement.appendChild(storyTitle);
-            storyElement.appendChild(storyAuthor);
             storyElement.appendChild(storyDate);
             storyElement.appendChild(storyLink);
             storyElement.appendChild(clearFloat);
