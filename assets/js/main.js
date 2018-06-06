@@ -11,11 +11,6 @@
         return _a-_b;
     };
 
-    function validateEnvironment() {
-        if (!('fetch' in window)) return false;
-        return true;
-    };
-
     function clearSingleStory() {
         let singleStory = document.querySelector('#singleStory .story');
         if(singleStory) {
@@ -273,8 +268,9 @@
     };
 
     async function initialize() {
-        if(!validateEnvironment()) {
-            throw Error("Invalid environment. Try a different browser");
+        if (!('fetch' in window)) {
+            doError("Invalid environment.  Try a different browser.");
+            return false;
         }
 
         let stories = await getStoryIndex();
