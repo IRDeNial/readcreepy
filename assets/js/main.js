@@ -123,7 +123,8 @@
     };
 
     function setNavStory(storyID) {
-        history.pushState(null,null,'story/' + storyID)
+        history.pushState(null,null,'story/' + storyID);
+        _preCacheClear();
     };
     
     function setNavPage(pageID) {
@@ -134,7 +135,8 @@
         } else if(pageID > totalPages) {
             pageID = totalPages;
         }
-        history.pushState(null,null,'page/' + pageID)
+        history.pushState(null,null,'page/' + pageID);
+        _preCacheClear();
     };
 
     function isPathStory() {
@@ -236,8 +238,6 @@
     function singleStoryButtonHandler(e) {
         if(e.button != 0) return;
 
-        _preCacheClear();
-
         loadSingleStory(e.target.dataset.storyid);
         setNavStory(e.target.dataset.storyid);
     };
@@ -252,7 +252,6 @@
         if(e.button != 0) return;
 
         clearPage();
-        _preCacheClear();
 
         renderStoryList(loadPage(e.target.dataset.page));
         currentPage = parseInt(e.target.dataset.page);
