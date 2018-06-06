@@ -40,10 +40,8 @@ header {
     top: 0;
     left: 0;
     background-color: #162D50 !important;
-	box-shadow: 0px 3px 4px #080808;
+	box-shadow: 0px 1px 1px #080808;
 	margin-bottom: 0px;
-	border-bottom: 1px solid rgb(0, 0, 0);
-	filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#162d50', endColorstr='#162d50',GradientType=0 ); /* IE6-9 */
 
     @include media("<tablet") {
         width: calc(100% - 20px);
