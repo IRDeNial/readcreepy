@@ -9,7 +9,7 @@
         let _a = Number(a.time);
         let _b = Number(b.time);
         return _a-_b;
-    };
+    }
 
     function clearSingleStory() {
         let singleStory = document.querySelector('#singleStory .story');
@@ -22,11 +22,11 @@
         let oldStoryList = document.getElementById('storyList');
         let newStoryList = oldStoryList.cloneNode();
         oldStoryList.parentNode.replaceChild(newStoryList,oldStoryList);
-    };
+    }
 
     function doError(message) {
         throw Error(message);
-    };
+    }
 
     function buildStoryDOM(story) {
         let storyElement = document.createElement('div');
@@ -71,7 +71,7 @@
         storyElement.appendChild(returnButton.cloneNode(true));
 
         document.querySelector('#singleStory').appendChild(storyElement);
-    };
+    }
 
     async function loadSingleStory(storyid) {
         let story = cachedPageStories[storyid];
@@ -90,7 +90,7 @@
         scrollToPosition(0);
         document.querySelector('#singleStory').classList.remove('hidden');
         document.querySelector('#storyList').classList.add('hidden');
-    };
+    }
 
     function loadPage(pageIndex) {
         if(isNaN(pageIndex)) {
@@ -104,7 +104,7 @@
         let pageEndIndex = pageStartIndex + amountPerPage;
 
         return fullStories.slice(pageStartIndex,pageEndIndex);
-    };
+    }
 
     async function getStoryIndex() {
         let response = await fetch('/content/index.json');
@@ -116,16 +116,16 @@
         } catch(error) {
             doError(error);
         }
-    };
+    }
 
     function fixURLs(content) {
         return content.replace(/\"(https?\:)?\/\/((old|www|np)\.)?(reddit\.com\/r\/nosleep\/comments|redd\.it)\/([a-zA-Z0-9]+)(.*?)\>/gim,'"/story/$5">Link:&nbsp;');
-    };
+    }
 
     function setNavStory(storyID) {
         history.pushState(null,null,'story/' + storyID);
         _preCacheClear();
-    };
+    }
     
     function setNavPage(pageID) {
         if(isNaN(pageID)) {
@@ -137,15 +137,15 @@
         }
         history.pushState(null,null,'page/' + pageID);
         _preCacheClear();
-    };
+    }
 
     function isPathStory() {
         return !!(window.location.pathname.match(/\/story\/(.*)/i));
-    };
+    }
     
     function isPathPage() {
         return !!(window.location.pathname.match(/\/page\/(.*)/i));
-    };
+    }
 
     function buildNav(activePage) {
         if(isNaN(activePage)) {
@@ -170,11 +170,11 @@
             navigatorContainer.appendChild(pageItem);
         }
         document.querySelector('#storyList').appendChild(navigatorContainer);
-    };
+    }
 
     function scrollToPosition(y) {
         scrollTo(0,y);
-    };
+    }
 
     async function _preCacheStory(storyID) {
         let response = await fetch('/content/' + storyID + '.json');
@@ -182,7 +182,8 @@
         if(response.ok) {
             cachedPageStories[storyID] = jsonData;
         }
-    };
+    }
+
     function _preCacheClear() {
         cachedPageStories = [];
     }
@@ -222,10 +223,10 @@
 
             _preCacheStory(story.id);
         }
-    };    
+    }  
 
     function returnButtonHandler(e) {
-        if(e.button != 0) return;
+        if(e.button !== 0) return;
 
         document.querySelector('#singleStory').classList.add('hidden');
         document.querySelector('#storyList').classList.remove('hidden');
@@ -233,23 +234,23 @@
         renderStoryList(loadPage(currentPage));
         buildNav(currentPage);
         setNavPage(currentPage+1);
-    };
+    }
 
     function singleStoryButtonHandler(e) {
-        if(e.button != 0) return;
+        if(e.button !== 0) return;
 
         loadSingleStory(e.target.dataset.storyid);
         setNavStory(e.target.dataset.storyid);
-    };
+    }
 
     function preventDefaultHandler(e) {
-        if(e.button != 0) return;
+        if(e.button !== 0) return;
 
         e.preventDefault();
-    };
+    }
 
     function paginationButtonHandler(e) {
-        if(e.button != 0) return;
+        if(e.button !== 0) return;
 
         clearPage();
 
@@ -258,13 +259,13 @@
         buildNav(e.target.dataset.page);
         setNavPage(parseInt(e.target.dataset.page,10)+1);
         scrollToPosition(0);
-    };
+    }
 
     function bindClickEventListener(target,functionName) {
         target.addEventListener('mousedown',functionName);
         target.addEventListener('touchstart',functionName);
         target.addEventListener('click',preventDefaultHandler);
-    };
+    }
 
     async function initialize() {
         if (!('fetch' in window)) {
@@ -272,7 +273,7 @@
             return false;
         }
 
-        let stories = await getStoryIndex();
+        await getStoryIndex();
 
         if(isPathStory()) {
             let storyID = window.location.pathname.match(/\/story\/(.*)/i)[1];
