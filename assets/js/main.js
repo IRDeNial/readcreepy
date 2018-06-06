@@ -3,6 +3,7 @@
     var amountPerPage = 25;
     var fullStories = null;
     var totalPages = 1;
+    var cachedPageStories = [];
 
     function _dateSort(a,b) {
         let _a = Number(a.time);
@@ -32,63 +33,67 @@
         throw Error(message);
     };
 
+    function buildStoryDOM(story) {
+        let storyElement = document.createElement('div');
+        storyElement.classList.add('story');
+        let datePosted = new Date(parseFloat(story.time));
+
+        let storyTitle = document.createElement('div');
+        storyTitle.textContent = story.title;
+        storyTitle.classList.add('title');
+
+        let storyAuthor = document.createElement('a');
+        storyAuthor.textContent = 'Author: ' + story.author;
+        storyAuthor.setAttribute('target','_BLANK');
+        storyAuthor.setAttribute('href','https://reddit.com/u/' + story.author);
+        storyAuthor.classList.add('author','detail');
+
+        let storyDate = document.createElement('span');
+        storyDate.textContent = 'Posted ' + moment(datePosted.toLocaleDateString()).fromNow();
+        storyDate.classList.add('date','detail');
+
+        let storyLink = document.createElement('a');
+        storyLink.textContent = 'Original: ' + story.url;
+        storyLink.classList.add('link','detail');
+        storyLink.setAttribute('target','_BLANK');
+        storyLink.setAttribute('href','https://np.reddit.com' + story.url);
+
+        let returnButton = document.createElement('button');
+        returnButton.classList.add('returnButton');
+        returnButton.setAttribute('type','button');
+        returnButton.textContent = 'Return To Story List';
+
+        let storyContent = document.createElement('div');
+        storyContent.classList.add('content');
+        storyContent.innerHTML = fixURLs(story.body);
+
+        storyElement.appendChild(storyTitle);
+        storyElement.appendChild(storyAuthor);
+        storyElement.appendChild(storyDate);
+        storyElement.appendChild(storyLink);
+        storyElement.appendChild(returnButton);
+        storyElement.appendChild(storyContent);
+        storyElement.appendChild(returnButton.cloneNode(true));
+
+        document.querySelector('#singleStory').appendChild(storyElement);
+        
+        document.querySelectorAll('.returnButton').forEach((target) => {
+            bindClickEventListener(target,returnButtonHandler);
+        });
+
+        scrollToPosition(0);
+        document.querySelector('#singleStory').classList.remove('hidden');
+        document.querySelector('#storyList').classList.add('hidden');
+    };
+
     async function loadSingleStory(storyid) {
-        let request = await fetch('/content/' + storyid + '.json');
-        let story = await request.json();
-
-        try {
-            let storyElement = document.createElement('div');
-            storyElement.classList.add('story');
-            let datePosted = new Date(parseFloat(story.time));
-
-            let storyTitle = document.createElement('div');
-            storyTitle.textContent = story.title;
-            storyTitle.classList.add('title');
-
-            let storyAuthor = document.createElement('a');
-            storyAuthor.textContent = 'Author: ' + story.author;
-            storyAuthor.setAttribute('target','_BLANK');
-            storyAuthor.setAttribute('href','https://reddit.com/u/' + story.author);
-            storyAuthor.classList.add('author','detail');
-
-            let storyDate = document.createElement('span');
-            storyDate.textContent = 'Posted ' + moment(datePosted.toLocaleDateString()).fromNow();
-            storyDate.classList.add('date','detail');
-
-            let storyLink = document.createElement('a');
-            storyLink.textContent = 'Original: ' + story.url;
-            storyLink.classList.add('link','detail');
-            storyLink.setAttribute('target','_BLANK');
-            storyLink.setAttribute('href','https://np.reddit.com' + story.url);
-
-            let returnButton = document.createElement('button');
-            returnButton.classList.add('returnButton');
-            returnButton.setAttribute('type','button');
-            returnButton.textContent = 'Return To Story List';
-
-            let storyContent = document.createElement('div');
-            storyContent.classList.add('content');
-            storyContent.innerHTML = fixURLs(story.body);
-
-            storyElement.appendChild(storyTitle);
-            storyElement.appendChild(storyAuthor);
-            storyElement.appendChild(storyDate);
-            storyElement.appendChild(storyLink);
-            storyElement.appendChild(returnButton);
-            storyElement.appendChild(storyContent);
-            storyElement.appendChild(returnButton.cloneNode(true));
-
-            document.querySelector('#singleStory').appendChild(storyElement);
-            
-            document.querySelectorAll('.returnButton').forEach((target) => {
-                bindClickEventListener(target,returnButtonHandler);
-            });
-
-            scrollToPosition(0);
-            document.querySelector('#singleStory').classList.remove('hidden');
-            document.querySelector('#storyList').classList.add('hidden');
-        } catch(error) {
-            doError(error);
+        if(cachedPageStories[storyid]) {
+            let story = cachedPageStories[storyid];
+            buildStoryDOM(story);
+        } else {
+            let request = await fetch('/content/' + storyid + '.json');
+            let story = await request.json();
+            buildStoryDOM(story);
         }
     };
 
@@ -174,6 +179,17 @@
         scrollTo(0,y);
     };
 
+    async function _preCacheStory(storyID) {
+        let response = await fetch('/content/' + storyID + '.json');
+        let jsonData = await response.json();
+        if(response.ok) {
+            cachedPageStories[storyID] = jsonData;
+        }
+    };
+    function _preCacheClear() {
+        cachedPageStories = [];
+    }
+
     function renderStoryList(stories) {
         clearSingleStory();
         
@@ -206,6 +222,8 @@
             storyElement.appendChild(storyLink);
 
             document.querySelector('#storyList').appendChild(storyElement);
+
+            _preCacheStory(story.id);
         }
     };    
 
@@ -223,6 +241,8 @@
     function singleStoryButtonHandler(e) {
         if(e.button != 0) return;
 
+        _preCacheClear();
+
         loadSingleStory(e.target.dataset.storyid);
         setNavStory(e.target.dataset.storyid);
     };
@@ -237,6 +257,8 @@
         if(e.button != 0) return;
 
         clearPage();
+        _preCacheClear();
+
         renderStoryList(loadPage(e.target.dataset.page));
         currentPage = parseInt(e.target.dataset.page);
         buildNav(e.target.dataset.page);
