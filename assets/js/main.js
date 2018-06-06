@@ -71,14 +71,6 @@
         storyElement.appendChild(returnButton.cloneNode(true));
 
         document.querySelector('#singleStory').appendChild(storyElement);
-        
-        document.querySelectorAll('.returnButton').forEach((target) => {
-            bindClickEventListener(target,returnButtonHandler);
-        });
-
-        scrollToPosition(0);
-        document.querySelector('#singleStory').classList.remove('hidden');
-        document.querySelector('#storyList').classList.add('hidden');
     };
 
     async function loadSingleStory(storyid) {
@@ -90,6 +82,14 @@
             let story = await request.json();
             buildStoryDOM(story);
         }
+
+        document.querySelectorAll('.returnButton').forEach((target) => {
+            bindClickEventListener(target,returnButtonHandler);
+        });
+
+        scrollToPosition(0);
+        document.querySelector('#singleStory').classList.remove('hidden');
+        document.querySelector('#storyList').classList.add('hidden');
     };
 
     function loadPage(pageIndex) {
