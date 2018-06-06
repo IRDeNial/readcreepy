@@ -74,15 +74,15 @@
     };
 
     async function loadSingleStory(storyid) {
-        if(cachedPageStories[storyid]) {
-            let story = cachedPageStories[storyid];
-            buildStoryDOM(story);
-        } else {
+        let story = cachedPageStories[storyid];
+        if(!story) {
             let request = await fetch('/content/' + storyid + '.json');
-            let story = await request.json();
-            buildStoryDOM(story);
+            story = await request.json();
+            
         }
-
+        
+        buildStoryDOM(story);
+        
         document.querySelectorAll('.returnButton').forEach((target) => {
             bindClickEventListener(target,returnButtonHandler);
         });
