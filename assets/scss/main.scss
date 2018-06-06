@@ -2,7 +2,7 @@
 @import "include-media";
 
 // Fonts
-@import url('https://fonts.googleapis.com/css?family=Roboto|Special+Elite');
+@import url('https://fonts.googleapis.com/css?family=Roboto|Special+Elite|Rancho');
 
 // Variables
 $mainTextColor: rgb(200,200,200);
@@ -15,8 +15,9 @@ $secondaryDividerColor: rgb(50,50,50);
 
 $scaryFont: 'Special Elite', cursive;
 $defaultFont: 'Roboto', sans-serif;
+$cursiveFont: 'Rancho', cursive;
 
-body,html {
+html,body {
     font-family: $defaultFont;
     padding: 0;
     margin: 0;
@@ -25,10 +26,24 @@ body,html {
     color: $mainTextColor;
 }
 
+body {
+    margin-top: 75px;
+}
+
 header {
     height: 50px;
     line-height: 50px;
+    width: 100%;
     vertical-align: middle;
+    position: fixed;
+    z-index: 1000;
+    top: 0;
+    left: 0;
+    background-color: #162D50 !important;
+	box-shadow: 0px 3px 4px #080808;
+	margin-bottom: 0px;
+	border-bottom: 1px solid rgb(0, 0, 0);
+	filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#162d50', endColorstr='#162d50',GradientType=0 ); /* IE6-9 */
 
     @include media("<tablet") {
         width: calc(100% - 20px);
@@ -39,12 +54,17 @@ header {
     h1 {
         padding: 0;
         margin: 0;
+        color: #FFFFFF;
+        text-shadow: 1px 1px #000000;
+        font-family: $cursiveFont;
     }
 }
 
-#storyList {
-    min-height: calc(100vh - 100px);
+.alignBelowHeader {
+    min-height: calc(100vh - 141px);
+}
 
+#storyList {
     @include media("<tablet") {
         width: calc(100% - 20px);
         padding: 0 10px;
@@ -52,13 +72,13 @@ header {
 
     .story {
         @include media("<tablet") {
-            border-top: 1px solid #cacaca;
-            padding-top: 10px;
-            padding-bottom: 10px;
+            text-align: center;
         }
-        padding-top: 5px;
-        padding-bottom: 5px;
+        background-color: #444444;
+        padding: 10px 5px;
         position: relative;
+        border-radius: 5px;
+        margin-bottom: 5px;
 
         .storyLink {
             text-decoration: none;
@@ -71,16 +91,19 @@ header {
         }
 
         .detail {
+            @include media(">=tablet") {
+                float: right;
+            }
             font-size: 12px;
+            margin: 0 5px;
         }
         .title {
+            @include media(">=tablet") {
+                float: left;
+            }
             font-family: $scaryFont;
             word-break: break-word;
             word-wrap: break-word;
-        }
-
-        .date {
-            margin-left: 5px;
         }
     }
 
@@ -110,8 +133,6 @@ header {
 }
 
 #singleStory {
-    min-height: calc(100vh - 100px);
-
     @include media("<tablet") {
         width: calc(100% - 20px);
         padding: 0 10px;
@@ -212,4 +233,8 @@ footer {
     margin-left: auto;
     padding-right: 2rem;
     padding-left: 2rem;
+}
+
+.clearFloat {
+    clear: both;
 }

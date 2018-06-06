@@ -214,10 +214,14 @@
             storyDate.classList.add('date','detail');
             storyDate.textContent = 'Date: ' + moment(datePosted.toLocaleDateString()).fromNow();
 
+            let clearFloat = document.createElement('div');
+            clearFloat.classList.add('clearFloat');
+
             storyElement.appendChild(storyTitle);
             storyElement.appendChild(storyAuthor);
             storyElement.appendChild(storyDate);
             storyElement.appendChild(storyLink);
+            storyElement.appendChild(clearFloat);
 
             document.querySelector('#storyList').appendChild(storyElement);
 
