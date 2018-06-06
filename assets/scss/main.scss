@@ -25,13 +25,6 @@ body,html {
     color: $mainTextColor;
 }
 
-.container {
-    margin-right: auto;
-    margin-left: auto;
-    padding-right: 2rem;
-    padding-left: 2rem;
-}
-
 header {
     height: 50px;
     line-height: 50px;
@@ -207,8 +200,16 @@ footer {
 .textCenter {
     text-align: center;
 }
+
 .textCenter-mobile {
     @include media('<tablet') {
         text-align: center;
     }
+}
+
+.container {
+    margin-right: auto;
+    margin-left: auto;
+    padding-right: 2rem;
+    padding-left: 2rem;
 }
