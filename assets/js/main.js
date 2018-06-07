@@ -56,7 +56,7 @@
         storyAuthor.classList.add('author','detail');
 
         let storyDate = document.createElement('span');
-        storyDate.textContent = 'Posted ' + moment(datePosted.toLocaleDateString()).fromNow();
+        storyDate.textContent = 'Posted ' + moment(datePosted).fromNow();
         storyDate.classList.add('date','detail');
 
         let storyLink = document.createElement('a');
@@ -220,7 +220,7 @@
 
             let storyDate = document.createElement('span');
             storyDate.classList.add('date','detail');
-            storyDate.textContent = moment(datePosted.toLocaleDateString()).fromNow();
+            storyDate.textContent = moment(datePosted).fromNow();
 
             let clearFloat = document.createElement('div');
             clearFloat.classList.add('clearFloat');
