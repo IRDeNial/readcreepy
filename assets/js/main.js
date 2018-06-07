@@ -201,8 +201,8 @@
 
     function renderStoryList(stories) {
         clearSingleStory();
-        
-        for(let story of stories) {
+
+        stories.forEach((story) => {
             let storyElement = document.createElement('div');
             storyElement.classList.add('story');
             let datePosted = new Date(parseFloat(story.time));
