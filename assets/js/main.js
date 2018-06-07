@@ -350,7 +350,7 @@
 
         document.querySelector('#search .searchInput').addEventListener('keydown',_debounce((e) => {
             searchHandler(e);
-        },250));
+        },100));
     }
 
     initialize();
