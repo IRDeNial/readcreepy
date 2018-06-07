@@ -264,13 +264,11 @@
 
         clearPage();
 
-        if(searchVal.trim().length > 0) {
+        if(searchVal.trim().length) {
             fullStories = fullStoriesBack;
             fullStories = doSearchStory(searchVal);
             
             if(fullStories.length === 0) {
-                fullStories = fullStoriesBack;
-                fullStoriesBack = null;
                 noResultsFound();
             }
         } else {
@@ -279,8 +277,10 @@
 
         totalPages = Math.floor(fullStories.length/amountPerPage);
         currentPage = 1;
-        renderStoryList(loadPage(0));
-        buildNav(0);
+        if(fullStories.length) {
+            renderStoryList(loadPage(0));
+            buildNav(0);
+        }
         setNavPage(1);
     }
 
