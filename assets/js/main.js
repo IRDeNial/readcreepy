@@ -354,4 +354,6 @@
     }
 
     initialize();
+    console.log("%c\uD83D\uDC7B\u0020\u0042\u004f\u004f", "color:#fefefe;font-size:10em;background-color:#323232;padding:25px;font-family:'Special Elite', cursive;");
+    console.log("%cSorry, did I scare you?  Feel free to poke around.\nThere isn't much to do here though.", "color: black; font-size: 2em");
 })();
