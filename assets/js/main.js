@@ -5,6 +5,7 @@
     var fullStoriesBack = null;
     var totalPages = 1;
     var cachedPageStories = [];
+    var currentScrollPos = 0;
 
     function _dateSort(a,b) {
         let _a = Number(a.time);
@@ -193,6 +194,9 @@
     function scrollToPosition(y) {
         scrollTo(0,y);
     }
+    function scrollSetPosition(y) {
+        currentScrollPos = y;
+    }
 
     async function _preCacheStory(storyID) {
         let response = await fetch('/content/' + storyID + '.json');
@@ -302,10 +306,13 @@
         renderStoryList(loadPage(currentPage));
         buildNav(currentPage);
         setNavPage(currentPage+1);
+
+        scrollToPosition(currentScrollPos);
     }
 
     function singleStoryButtonHandler(e) {
         if(e.button !== 0) return;
+        scrollSetPosition(window.scrollY);
 
         loadSingleStory(e.target.dataset.storyid);
         setNavStory(e.target.dataset.storyid);
