@@ -11,6 +11,17 @@
         return _a-_b;
     }
 
+    function _debounce(callback, time) {
+        let timeout;
+      
+        return function() {
+            const functionCall = () => callback.apply(this, arguments);
+          
+            clearTimeout(timeout);
+            timeout = setTimeout(functionCall, time);
+        }
+    }
+
     function clearSingleStory() {
         let singleStory = document.querySelector('#singleStory .story');
         if(singleStory) {
