@@ -62,6 +62,18 @@ header {
     min-height: calc(100vh - 141px);
 }
 
+#search {
+    margin-bottom: 15px;
+
+    .searchInput {
+        width: calc(100% - 10px);
+        border: 0;
+        border-radius: 0;
+        padding: 5px;
+        font-size: 16px;
+    }
+}
+
 #storyList {
     @include media("<tablet") {
         width: calc(100% - 20px);

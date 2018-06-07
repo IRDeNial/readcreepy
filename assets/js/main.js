@@ -232,8 +232,32 @@
             document.querySelector('#storyList').appendChild(storyElement);
 
             _preCacheStory(story.id);
+        });
+    }
+
+    function doSearchStory(searchParams) {
+        searchParams = searchParams.toLowerCase();
+        return fullStories.filter((story) => {
+            if(story.title && story.title.toLowerCase().includes(searchParams)) {
+                return true;
+            } else if(story.author && story.author.toLowerCase().includes(searchParams)) {
+                return true;
+            } else {
+                return false;
+            }
+        });
+    }
+
+    function searchHandler(e) {
+        let searchVal = e.target.value;
+        clearPage();
+        if(searchVal.trim().length >= 3) {
+            renderStoryList(doSearchStory(searchVal));
+        } else {
+            renderStoryList(loadPage(currentPage));
+            buildNav(currentPage);
         }
-    }  
+    }
 
     function returnButtonHandler(e) {
         if(e.button !== 0) return;
@@ -298,6 +322,10 @@
         }
 
         scrollToPosition(0);
+
+        document.querySelector('#search .searchInput').addEventListener('keydown',_debounce((e) => {
+            searchHandler(e);
+        },250));
     }
 
     initialize();
