@@ -2,7 +2,7 @@
     var currentPage = 0;
     var amountPerPage = 25;
     var fullStories = null;
-    var fullStoriesBack = fullStories;
+    var fullStoriesBack = null;
     var totalPages = 1;
     var cachedPageStories = [];
 
@@ -249,23 +249,39 @@
         });
     }
 
+    function noResultsFound() {
+        let workarea = document.querySelector('#storyList');
+        let noResultsFound = document.createElement('h1');
+        noResultsFound.textContent = 'No results found';
+        workarea.appendChild(noResultsFound);
+    }
+
     function searchHandler(e) {
         let searchVal = e.target.value;
-        clearPage();
-        if(searchVal.trim().length > 0) {
+        if(!fullStoriesBack) {
             fullStoriesBack = fullStories;
+        }
+
+        clearPage();
+
+        if(searchVal.trim().length > 0) {
+            fullStories = fullStoriesBack;
             fullStories = doSearchStory(searchVal);
-            totalPages = Math.floor(fullStories.length/amountPerPage);
-            currentPage = 1;
-            renderStoryList(loadPage(0));
-            buildNav(0);
+            
+            if(fullStories.length === 0) {
+                fullStories = fullStoriesBack;
+                fullStoriesBack = null;
+                noResultsFound();
+            }
         } else {
             fullStories = fullStoriesBack;
-            totalPages = Math.floor(fullStories.length/amountPerPage);
-            currentPage = 1;
-            renderStoryList(loadPage(0));
-            buildNav(0);
         }
+
+        totalPages = Math.floor(fullStories.length/amountPerPage);
+        currentPage = 1;
+        renderStoryList(loadPage(0));
+        buildNav(0);
+        setNavPage(1);
     }
 
     function returnButtonHandler(e) {
