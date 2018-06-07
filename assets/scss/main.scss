@@ -129,6 +129,16 @@ header {
     .navigation {
         margin-top: 15px;
         margin-bottom: 15px;
+
+        .currentPageSelector {
+            background-color: transparent;
+            color: #fefefe;
+            width: auto;
+            display: inline-block;
+            border: 0;
+            text-align: center;
+        }
+
         .page {
             display: inline-block;
             width: 20px;

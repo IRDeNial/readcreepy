@@ -2,6 +2,7 @@
     var currentPage = 0;
     var amountPerPage = 25;
     var fullStories = null;
+    var fullStoriesBack = fullStories;
     var totalPages = 1;
     var cachedPageStories = [];
 
@@ -251,11 +252,19 @@
     function searchHandler(e) {
         let searchVal = e.target.value;
         clearPage();
-        if(searchVal.trim().length >= 3) {
-            renderStoryList(doSearchStory(searchVal));
+        if(searchVal.trim().length > 0) {
+            fullStoriesBack = fullStories;
+            fullStories = doSearchStory(searchVal);
+            totalPages = Math.floor(fullStories.length/amountPerPage);
+            currentPage = 1;
+            renderStoryList(loadPage(0));
+            buildNav(0);
         } else {
-            renderStoryList(loadPage(currentPage));
-            buildNav(currentPage);
+            fullStories = fullStoriesBack;
+            totalPages = Math.floor(fullStories.length/amountPerPage);
+            currentPage = 1;
+            renderStoryList(loadPage(0));
+            buildNav(0);
         }
     }
 
