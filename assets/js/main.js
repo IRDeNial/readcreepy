@@ -46,21 +46,25 @@
         let datePosted = new Date(parseFloat(story.time));
 
         let storyTitle = document.createElement('div');
-        storyTitle.textContent = story.title;
+        let storyTitleTextContent = document.createTextNode(story.title);
+        storyTitle.appendChild(storyTitleTextContent);
         storyTitle.classList.add('title');
 
         let storyAuthor = document.createElement('a');
-        storyAuthor.textContent = 'Author: ' + story.author;
+        let storyAuthorTextContent = document.createTextNode('Author: ' + story.author);
+        storyAuthor.appendChild(storyAuthorTextContent);
         storyAuthor.setAttribute('target','_BLANK');
         storyAuthor.setAttribute('href','https://reddit.com/u/' + story.author);
         storyAuthor.classList.add('author','detail');
 
         let storyDate = document.createElement('span');
-        storyDate.textContent = 'Posted ' + moment(datePosted).fromNow();
+        let storyDateTextContent = document.createTextNode('Posted: ' + moment(datePosted).fromNow());
+        storyDate.appendChild(storyDateTextContent);
         storyDate.classList.add('date','detail');
 
         let storyLink = document.createElement('a');
-        storyLink.textContent = 'Original: ' + story.url;
+        let storyLinkTextContent = document.createTextNode('Original: ' + story.url);
+        storyLink.appendChild(storyLinkTextContent);
         storyLink.classList.add('link','detail');
         storyLink.setAttribute('target','_BLANK');
         storyLink.setAttribute('href','https://np.reddit.com' + story.url);
@@ -68,7 +72,8 @@
         let returnButton = document.createElement('button');
         returnButton.classList.add('returnButton');
         returnButton.setAttribute('type','button');
-        returnButton.textContent = 'Return To Story List';
+        let returnButtonTextContent = document.createTextNode('Return To Story List');
+        returnButton.appendChild(returnButtonTextContent);
 
         let storyContent = document.createElement('div');
         storyContent.classList.add('content');
@@ -177,7 +182,8 @@
                 pageItem.classList.add('active');
             }
             pageItem.dataset.page = i;
-            pageItem.textContent = i+1;
+            let pageItemText = document.createTextNode(i+1);
+            pageItem.appendChild(pageItemText);
             bindClickEventListener(pageItem,paginationButtonHandler);
             navigatorContainer.appendChild(pageItem);
         }
@@ -216,11 +222,13 @@
 
             let storyTitle = document.createElement('div');
             storyTitle.classList.add('title');
-            storyTitle.textContent = story.title;
+            let storyTitleTextContent = document.createTextNode(story.title);
+            storyTitle.appendChild(storyTitleTextContent);
 
             let storyDate = document.createElement('span');
             storyDate.classList.add('date','detail');
-            storyDate.textContent = moment(datePosted).fromNow();
+            let storyDateTextContent = document.createTextNode(moment(datePosted).fromNow());
+            storyDate.appendChild(storyDateTextContent);
 
             let clearFloat = document.createElement('div');
             clearFloat.classList.add('clearFloat');
@@ -252,7 +260,8 @@
     function noResultsFound() {
         let workarea = document.querySelector('#storyList');
         let noResultsFound = document.createElement('h1');
-        noResultsFound.textContent = 'No results found';
+        let noResultsFoundTextContent = document.createTextNode('No Results Found');
+        noResultsFound.appendChild(noResultsFoundTextContent);
         workarea.appendChild(noResultsFound);
     }
 
