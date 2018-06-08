@@ -249,7 +249,7 @@
             _preCacheStory(story.id);
         });
 
-        if(searchBarInput.val != '') {
+        if(searchBarInput.value != '') {
             searchBar.classList.remove('hidden');
         }
     }
