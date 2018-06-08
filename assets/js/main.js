@@ -96,7 +96,6 @@
         if(!story) {
             let request = await fetch('/content/' + storyid + '.json');
             story = await request.json();
-            
         }
         
         buildStoryDOM(story);
@@ -106,6 +105,7 @@
         });
 
         scrollToPosition(0);
+        document.querySelector('#search').classList.add('hidden');
         document.querySelector('#singleStory').classList.remove('hidden');
         document.querySelector('#storyList').classList.add('hidden');
     }
@@ -213,6 +213,8 @@
     function renderStoryList(stories) {
         clearSingleStory();
 
+        let searchBarInput = document.querySelector('#search .searchInput');
+        let searchBar = document.querySelector('#search');
         stories.forEach((story) => {
             let storyElement = document.createElement('div');
             storyElement.classList.add('story');
@@ -246,6 +248,10 @@
 
             _preCacheStory(story.id);
         });
+
+        if(searchBarInput.val != '') {
+            searchBar.classList.remove('hidden');
+        }
     }
 
     function doSearchStory(searchParams) {
@@ -367,6 +373,30 @@
         document.querySelector('#search .searchInput').addEventListener('keydown',_debounce((e) => {
             searchHandler(e);
         },100));
+
+        document.querySelector('.headerHomeNav').addEventListener('mousedown',(e) => {
+            if(fullStoriesBack) {
+                fullStories = fullStoriesBack;
+                fullStoriesBack = null;
+            }
+            clearPage();
+            document.querySelector('#singleStory').classList.add('hidden');
+            document.querySelector('#storyList').classList.remove('hidden');
+            document.querySelector('#search .searchInput').value = '';
+            renderStoryList(loadPage(0));
+            buildNav(0);
+            setNavPage(1);
+        });
+
+        document.querySelector('.headerNav .search').addEventListener('mousedown',(e) => {
+            let searchBar = document.querySelector('#search');
+
+            if(searchBar.classList.contains('hidden')) {
+                searchBar.classList.remove('hidden');
+            } else {
+                searchBar.classList.add('hidden');
+            }
+        });
     }
 
     initialize();
