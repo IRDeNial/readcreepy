@@ -57,6 +57,7 @@ header {
         font-family: $cursiveFont;
         display: inline-block;
         cursor: pointer;
+        user-select: none
     }
 
     .headerNav {
@@ -65,6 +66,7 @@ header {
 
         li {
             cursor: pointer;
+            user-select: none
         }
     }
 }
