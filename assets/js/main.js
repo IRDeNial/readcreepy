@@ -375,6 +375,8 @@
         },100));
 
         document.querySelector('.headerHomeNav').addEventListener('mousedown',(e) => {
+            if(e.button !== 0) return;
+            
             if(fullStoriesBack) {
                 fullStories = fullStoriesBack;
                 fullStoriesBack = null;
@@ -389,6 +391,8 @@
         });
 
         document.querySelector('.headerNav .search').addEventListener('mousedown',(e) => {
+            if(e.button !== 0) return;
+            
             let searchBar = document.querySelector('#search');
 
             if(searchBar.classList.contains('hidden')) {
